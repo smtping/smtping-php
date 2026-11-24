@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json
+      - name: Syntax
+        run: find src tests -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Tests
+        run: php -d error_reporting=-1 tests/run.php
+      - name: composer.json
+        run: composer validate --no-check-lock --no-check-publish
