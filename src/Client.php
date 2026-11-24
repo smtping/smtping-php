@@ -19,7 +19,7 @@ final class Client
     public const BULK_MAX = 100000;
 
     private const SAFE = ['valid', 'alias'];
-    private const AVOID = ['invalid', 'spamtrap', 'disposable', 'blacklisted', 'complainer', 'spambot', 'inbox_full'];
+    private const AVOID = ['invalid', 'spamtrap', 'disposable', 'blacklisted', 'complainer', 'spambot', 'inbox_full', 'no_reply'];
 
     public readonly Bulk $bulk;
     private string $apiKey;
@@ -176,7 +176,9 @@ final class Client
      */
     public static function withBand($r)
     {
-        if (is_array($r) && isset($r['status']) && is_string($r['status']) && !isset($r['band'])) {
+        // The API decides the band (a valid address on a mistyped domain is judgement).
+        if (is_array($r) && isset($r['status']) && is_string($r['status'])
+            && !in_array($r['band'] ?? null, ['safe', 'avoid', 'judgement'], true)) {
             $r['band'] = self::band($r['status']);
         }
         return $r;
