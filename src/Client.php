@@ -13,7 +13,7 @@ use Smtping\Exception\ValidationException;
 
 final class Client
 {
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.1.0';
     public const DEFAULT_BASE_URL = 'https://api.smtping.com/api/v1';
     public const CHECKS = ['spamtrap', 'disposable', 'spambot', 'complainer'];
     public const BULK_MAX = 100000;
